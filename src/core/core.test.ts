@@ -46,11 +46,11 @@ describe('state', () => {
 
   it('restores settings from storage and rejects garbage', () => {
     const s = loadState(modules, '', null, seed);
-    s.perTask.thermometer.options.negatives = true;
+    s.perTask.thermometer.options.sign = 'minus';
     s.task = 'thermometer';
     const restored = loadState(modules, '', serializeSettings(s), seed);
     expect(restored.task).toBe('thermometer');
-    expect(restored.perTask.thermometer.options.negatives).toBe(true);
+    expect(restored.perTask.thermometer.options.sign).toBe('minus');
 
     const bad = loadState(modules, '?t=nope&n=999&o_precision=xyz&s=<script>', '{not json', seed);
     expect(bad.task).toBe('clock');

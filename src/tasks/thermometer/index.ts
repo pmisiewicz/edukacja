@@ -1,6 +1,6 @@
-import { getBool, getString } from '../../core/options';
+import { getString } from '../../core/options';
 import type { TaskModule } from '../../core/types';
-import { formatTemperature, generateThermometerTasks, type ThermometerTask } from './generator';
+import { formatTemperature, generateThermometerTasks, type TemperatureSign, type ThermometerTask } from './generator';
 import { thermometerSvg } from './render';
 
 export const thermometerModule: TaskModule<ThermometerTask> = {
@@ -30,7 +30,17 @@ export const thermometerModule: TaskModule<ThermometerTask> = {
       ],
       default: '5',
     },
-    { type: 'checkbox', key: 'negatives', label: 'Temperatury ujemne', default: false },
+    {
+      type: 'select',
+      key: 'sign',
+      label: 'Temperatury',
+      choices: [
+        { value: 'plus', label: 'Tylko dodatnie (od 0 °C)' },
+        { value: 'both', label: 'Dodatnie i ujemne' },
+        { value: 'minus', label: 'Tylko ujemne (poniżej 0 °C)' },
+      ],
+      default: 'plus',
+    },
   ],
   counts: [4, 6, 8, 10, 12],
   defaultCount: 8,
@@ -47,7 +57,7 @@ export const thermometerModule: TaskModule<ThermometerTask> = {
   },
 
   generate(rng, count, o) {
-    return generateThermometerTasks(rng, count, Number(getString(o, 'precision')), getBool(o, 'negatives'));
+    return generateThermometerTasks(rng, count, Number(getString(o, 'precision')), getString(o, 'sign') as TemperatureSign);
   },
 
   renderTask(t, ctx) {

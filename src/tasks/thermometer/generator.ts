@@ -8,16 +8,20 @@ export interface ThermometerTask {
   temperature: number;
 }
 
+/** Which temperatures to draw: only ≥ 0, both signs, or only below zero. */
+export type TemperatureSign = 'plus' | 'both' | 'minus';
+
 export function generateThermometerTasks(
   rng: Rng,
   count: number,
   step: number,
-  negatives: boolean,
+  sign: TemperatureSign,
 ): ThermometerTask[] {
   const s = [1, 2, 5, 10].includes(step) ? step : 5;
-  const min = negatives ? SCALE_MIN : 0;
+  const min = sign === 'plus' ? 0 : SCALE_MIN;
+  const max = sign === 'minus' ? -1 : SCALE_MAX;
   const pool: number[] = [];
-  for (let t = Math.ceil(min / s) * s; t <= SCALE_MAX; t += s) pool.push(t);
+  for (let t = Math.ceil(min / s) * s; t <= max; t += s) pool.push(t);
   return pickDistinct(rng, pool, count).map((temperature) => ({ temperature }));
 }
 

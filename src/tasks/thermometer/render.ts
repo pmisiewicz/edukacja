@@ -17,7 +17,9 @@ const BULB_R = 15;
 const y = (t: number) => +(TOP + (SCALE_MAX - t) * PX_PER_DEG).toFixed(2);
 
 export function thermometerSvg(o: ThermometerSvgOptions): string {
-  const liquid = o.color ? '#dc2626' : '#111';
+  // Colour print: red column above zero, blue below (as on school thermometer charts).
+  const below = o.temperature !== null && o.temperature < 0;
+  const liquid = !o.color ? '#111' : below ? '#2563eb' : '#dc2626';
   const cx = (TUBE_L + TUBE_R) / 2;
   const parts: string[] = [];
 
@@ -44,5 +46,5 @@ export function thermometerSvg(o: ThermometerSvgOptions): string {
   }
   parts.push(`<text x="${TUBE_R + 19}" y="9" font-size="11" font-weight="600" fill="#111">°C</text>`);
 
-  return `<svg viewBox="0 0 100 330" preserveAspectRatio="xMidYMax meet"xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">${parts.join('')}</svg>`;
+  return `<svg viewBox="0 0 100 330" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">${parts.join('')}</svg>`;
 }

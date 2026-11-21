@@ -9,7 +9,7 @@ Online: https://pmisiewicz.github.io/edukacja/
 - **Zegary** — odczytywanie godziny lub rysowanie wskazówek; dokładność od pełnych godzin do 1 minuty, format 24h, pomoce na tarczy.
 - **Upływ czasu** — ile minęło między dwoma zegarami albo która będzie „za 45 min”.
 - **Kalendarz** — kartka miesiąca i pytania (dzień tygodnia, data za tydzień, ile sobót…).
-- **Termometry** — odczyt temperatury lub zamalowanie słupka; skala −30…+50 °C, dokładność 10/5/2/1 °C.
+- **Termometry** — odczyt temperatury lub zamalowanie słupka; skala −30…+50 °C, dokładność 10/5/2/1 °C; temperatury tylko dodatnie, dodatnie i ujemne albo tylko ujemne (w kolorze słupek poniżej zera jest niebieski).
 - **Linijka** — pomiar odcinka w cm lub cm i mm; linijka w skali 1:1 (drukuj w skali 100%).
 - **Waga kuchenna** — odczyt masy lub rysowanie wskazówki; skala 0–1000 g lub 0–5 kg.
 

@@ -34,7 +34,7 @@ describe('clock generator', () => {
 describe('thermometer generator', () => {
   it('stays within range and step, non-negative by default', () => {
     for (const step of [1, 2, 5, 10]) {
-      const tasks = generateThermometerTasks(createRng(step), 12, step, false);
+      const tasks = generateThermometerTasks(createRng(step), 12, step, 'plus');
       for (const { temperature } of tasks) {
         expect(temperature % step).toBe(0);
         expect(temperature).toBeGreaterThanOrEqual(0);
@@ -44,9 +44,19 @@ describe('thermometer generator', () => {
   });
 
   it('allows negatives down to -30 when enabled', () => {
-    const temps = generateThermometerTasks(createRng(3), 12, 1, true).map((t) => t.temperature);
+    const temps = generateThermometerTasks(createRng(3), 12, 1, 'both').map((t) => t.temperature);
     expect(Math.min(...temps)).toBeGreaterThanOrEqual(-30);
     expect(temps.some((t) => t < 0)).toBe(true);
+  });
+
+  it('only-negative mode stays below zero for every step', () => {
+    for (const step of [1, 2, 5, 10]) {
+      for (const t of generateThermometerTasks(createRng(step), 12, step, 'minus')) {
+        expect(t.temperature).toBeLessThan(0);
+        expect(t.temperature).toBeGreaterThanOrEqual(-30);
+        expect(Math.abs(t.temperature % step)).toBe(0);
+      }
+    }
   });
 
   it('formats with typographic minus', () => {
