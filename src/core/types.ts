@@ -52,6 +52,8 @@ export interface TaskModule<P = unknown> {
   /** Allowed numbers of tasks per page. */
   counts: number[];
   defaultCount: number;
+  /** Show task numbers (1., 2., ...) in cells. Default true. */
+  numbered?: boolean;
   defaultInstruction(options: Options): string;
   layout(count: number, options: Options): GridLayout;
   generate(rng: Rng, count: number, options: Options): P[];

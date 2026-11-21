@@ -276,7 +276,7 @@ legend {
   font-size: 14pt;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
-  padding-left: 7mm;
+  padding-left: 2mm;
 }
 .math-row .box {
   height: 7mm;

@@ -30,6 +30,8 @@ export const mathModule: TaskModule<MathTask> = {
   ],
   counts: [15, 30, 45, 60],
   defaultCount: 30,
+  // Numbers like "12." next to "3 + 4" read as part of the operation.
+  numbered: false,
 
   defaultInstruction: () => 'Oblicz i wpisz wynik.',
 

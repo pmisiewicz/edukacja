@@ -16,7 +16,10 @@ export function renderSheets(m: AnyTaskModule, state: AppState): string {
 
   const cells = (render: (t: unknown) => string) =>
     tasks
-      .map((t, i) => `<div class="cell"><span class="cell-no">${i + 1}.</span>${render(t)}</div>`)
+      .map(
+        (t, i) =>
+          `<div class="cell">${m.numbered === false ? '' : `<span class="cell-no">${i + 1}.</span>`}${render(t)}</div>`,
+      )
       .join('');
 
   let html = `
