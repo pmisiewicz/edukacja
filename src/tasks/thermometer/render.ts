@@ -44,5 +44,5 @@ export function thermometerSvg(o: ThermometerSvgOptions): string {
   }
   parts.push(`<text x="${TUBE_R + 19}" y="9" font-size="11" font-weight="600" fill="#111">°C</text>`);
 
-  return `<svg viewBox="0 0 100 330" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">${parts.join('')}</svg>`;
+  return `<svg viewBox="0 0 100 330" preserveAspectRatio="xMidYMax meet"xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">${parts.join('')}</svg>`;
 }

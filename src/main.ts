@@ -2,7 +2,7 @@ import './styles.css';
 import { renderPanel } from './core/panel';
 import { newSeed } from './core/rng';
 import { renderSheets } from './core/sheet';
-import { loadState, serializeSettings, stateToQuery, STORAGE_KEY, type AppState } from './core/state';
+import { loadState, normalizeTaskSettings, serializeSettings, stateToQuery, STORAGE_KEY, type AppState } from './core/state';
 import { getModule, modules } from './tasks';
 
 const panel = document.getElementById('panel')!;
@@ -39,6 +39,9 @@ function drawPanel() {
   renderPanel(panel, modules, state, {
     change(mutate, rebuild) {
       mutate(state);
+      // Panel inputs deliver raw values (e.g. numbers as text) — coerce and clamp them.
+      const m = getModule(state.task);
+      state.perTask[m.id] = normalizeTaskSettings(m, state.perTask[m.id]);
       sync(false);
       if (rebuild) drawPanel();
     },

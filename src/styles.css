@@ -230,9 +230,23 @@ legend {
 .box.wide {
   width: 14mm;
 }
-.answer.dual .box {
-  width: 6.5mm;
-  height: 7.5mm;
+/* clock time boxes: room for two handwritten digits each */
+.box.time {
+  width: 12mm;
+}
+.time-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 1mm;
+}
+/* 12h + 24h answers: second time on its own line so it fits narrow cells */
+.answer.dual {
+  flex-direction: column;
+  height: auto;
+  gap: 1mm;
+}
+.answer.dual .or {
+  margin: 0 1.5mm 0 0;
 }
 .colon {
   font-weight: 700;
@@ -249,30 +263,20 @@ legend {
 /* math operations: one row per task, numbers right-aligned */
 .math-row {
   flex: 1;
-  display: grid;
-  grid-template-columns: 5ch 2ch 5ch 2ch 16mm;
+  align-self: stretch;
+  display: flex;
   align-items: center;
+  gap: 1.5mm;
   font-size: 14pt;
   font-variant-numeric: tabular-nums;
-  padding-left: 6mm;
-}
-.math-row .num {
-  text-align: right;
-}
-.math-row .num.b {
-  text-align: left;
-}
-.math-row .op {
-  text-align: center;
+  white-space: nowrap;
+  padding-left: 7mm;
 }
 .math-row .box {
   height: 7mm;
-  justify-self: start;
-  margin-left: 1mm;
 }
 .math-row .result {
   font-weight: 700;
-  margin-left: 1mm;
 }
 
 .sheet-footer {

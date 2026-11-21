@@ -3,7 +3,8 @@ import type { Options, RenderContext, TaskModule } from '../../core/types';
 import { format12, format24, formatBoth, generateClockTasks, type ClockPrecision, type ClockTask } from './generator';
 import { clockSvg } from './render';
 
-const timeBoxes = '<span class="box"></span><span class="colon">:</span><span class="box"></span>';
+const timeBoxes =
+  '<span class="time-group"><span class="box time"></span><span class="colon">:</span><span class="box time"></span></span>';
 
 function svg(task: ClockTask | null, ctx: RenderContext): string {
   return clockSvg({
@@ -75,7 +76,7 @@ export const clockModule: TaskModule<ClockTask> = {
     if (getString(ctx.options, 'mode') === 'draw') {
       return `<div class="figure">${svg(null, ctx)}</div><div class="answer prompt">${answerText(t, ctx.options)}</div>`;
     }
-    const boxes = getBool(ctx.options, 'use24') ? `${timeBoxes}<span class="or">lub</span>${timeBoxes}` : timeBoxes;
+    const boxes = getBool(ctx.options, 'use24') ? `${timeBoxes}<span class="time-group"><span class="or">lub</span>${timeBoxes}</span>` : timeBoxes;
     const cls = getBool(ctx.options, 'use24') ? 'answer dual' : 'answer';
     return `<div class="figure">${svg(t, ctx)}</div><div class="${cls}">${boxes}</div>`;
   },

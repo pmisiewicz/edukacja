@@ -60,5 +60,5 @@ export function clockSvg(o: ClockSvgOptions): string {
   }
   parts.push(`<circle cx="${C}" cy="${C}" r="5" fill="#111"/>`);
 
-  return `<svg viewBox="${view}" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">${parts.join('')}</svg>`;
+  return `<svg viewBox="${view}" preserveAspectRatio="xMidYMax meet"xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">${parts.join('')}</svg>`;
 }
