@@ -319,9 +319,9 @@ legend {
 
 .sheet-footer {
   margin-top: 3mm;
-  font-size: 8pt;
+  font-size: 6pt;
   color: #9ca3af;
-  text-align: right;
+  text-align: center;
 }
 
 /* ---------- narrow screens ---------- */
