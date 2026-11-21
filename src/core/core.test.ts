@@ -62,6 +62,6 @@ describe('state', () => {
   it('clamps number options', () => {
     const s = loadState(modules, '?t=math&o_maxResult=99999&o_maxB=-5', null, seed);
     expect(s.perTask.math.options.maxResult).toBe(1000);
-    expect(s.perTask.math.options.maxB).toBe(1);
+    expect(s.perTask.math.options.maxB).toBe(0);
   });
 });

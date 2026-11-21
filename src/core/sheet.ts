@@ -15,7 +15,9 @@ export function renderSheets(m: AnyTaskModule, state: AppState): string {
   const footer = `<footer class="sheet-footer">Kod karty: ${escapeHtml(state.seed)}</footer>`;
 
   const cells = (render: (t: unknown) => string) =>
-    tasks
+    tasks.length === 0
+      ? '<p class="sheet-message">Nie da się ułożyć zadań dla tych ustawień — sprawdź zakresy w panelu (np. czy „od” nie jest większe niż „do”).</p>'
+      : tasks
       .map(
         (t, i) =>
           `<div class="cell">${m.numbered === false ? '' : `<span class="cell-no">${i + 1}.</span>`}${render(t)}</div>`,

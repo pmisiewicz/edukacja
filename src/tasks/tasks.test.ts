@@ -56,31 +56,51 @@ describe('thermometer generator', () => {
 });
 
 describe('math generator', () => {
+  const L = (a: [number, number], b: [number, number], r: [number, number]) => ({
+    a: { min: a[0], max: a[1] },
+    b: { min: b[0], max: b[1] },
+    result: { min: r[0], max: r[1] },
+  });
   const cases = [
-    { maxResult: 20, maxA: 20, maxB: 10 },
-    { maxResult: 10, maxA: 100, maxB: 100 },
-    { maxResult: 100, maxA: 5, maxB: 3 },
-    { maxResult: 1, maxA: 1, maxB: 1 },
+    L([1, 20], [1, 10], [0, 20]),
+    L([0, 100], [0, 100], [0, 10]),
+    L([1, 5], [1, 3], [0, 100]),
+    L([10, 20], [5, 9], [12, 18]),
+    L([50, 99], [10, 40], [30, 60]),
+    L([1, 1], [1, 1], [0, 2]),
   ];
+  const within = (v: number, r: { min: number; max: number }) => v >= r.min && v <= r.max;
+
   for (const limits of cases) {
-    it(`respects limits ${JSON.stringify(limits)}`, () => {
-      for (const seed of [1, 2, 3]) {
-        for (const t of generateMathTasks(createRng(seed), 60, 'mixed', limits)) {
-          expect(t.result).toBe(t.op === '+' ? t.a + t.b : t.a - t.b);
-          expect(t.result).toBeGreaterThanOrEqual(0);
-          expect(t.result).toBeLessThanOrEqual(limits.maxResult);
-          expect(t.a).toBeLessThanOrEqual(limits.maxA);
-          expect(t.b).toBeLessThanOrEqual(limits.maxB);
-          expect(t.a).toBeGreaterThanOrEqual(0);
-          expect(t.b).toBeGreaterThanOrEqual(0);
+    it(`respects ranges ${JSON.stringify(limits)}`, () => {
+      for (const mode of ['add', 'sub', 'mixed'] as const) {
+        for (const seed of [1, 2, 3]) {
+          for (const t of generateMathTasks(createRng(seed), 60, mode, limits)) {
+            expect(t.result).toBe(t.op === '+' ? t.a + t.b : t.a - t.b);
+            expect(within(t.a, limits.a)).toBe(true);
+            expect(within(t.b, limits.b)).toBe(true);
+            expect(within(t.result, limits.result)).toBe(true);
+          }
         }
       }
     });
   }
 
   it('honours operator mode', () => {
-    const limits = { maxResult: 20, maxA: 20, maxB: 10 };
+    const limits = L([1, 20], [1, 10], [0, 20]);
     expect(generateMathTasks(createRng(1), 30, 'add', limits).every((t) => t.op === '+')).toBe(true);
     expect(generateMathTasks(createRng(1), 30, 'sub', limits).every((t) => t.op === '-')).toBe(true);
+  });
+
+  it('returns nothing for impossible ranges', () => {
+    expect(generateMathTasks(createRng(1), 10, 'mixed', L([10, 5], [1, 10], [0, 20]))).toEqual([]);
+    expect(generateMathTasks(createRng(1), 10, 'add', L([1, 5], [1, 5], [50, 60]))).toEqual([]);
+  });
+
+  it('mixed mode falls back to the feasible operator', () => {
+    // A + B >= 10 > 8, so only subtraction fits.
+    const tasks = generateMathTasks(createRng(1), 20, 'mixed', L([5, 9], [5, 9], [0, 4]));
+    expect(tasks).toHaveLength(20);
+    expect(tasks.every((t) => t.op === '-')).toBe(true);
   });
 });

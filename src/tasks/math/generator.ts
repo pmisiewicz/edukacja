@@ -10,47 +10,71 @@ export interface MathTask {
   result: number;
 }
 
+export interface Range {
+  min: number;
+  max: number;
+}
+
 export interface MathLimits {
-  /** Max result of every operation. */
-  maxResult: number;
-  /** Max first number (A). */
-  maxA: number;
-  /** Max second number (B). */
-  maxB: number;
+  /** First number (A). */
+  a: Range;
+  /** Second number (B). */
+  b: Range;
+  /** Result of the operation. */
+  result: Range;
 }
 
-/** Lower bound 1 (no "+ 0" / "− 0" busywork) unless the limit forces 0. */
-const lo = (max: number) => (max >= 1 ? 1 : 0);
+const intersect = (x: Range, y: Range): Range => ({ min: Math.max(x.min, y.min), max: Math.min(x.max, y.max) });
+const isEmpty = (r: Range) => r.min > r.max;
 
-function addition(rng: Rng, l: MathLimits): MathTask {
-  // Leave room for B >= 1 so the result never exceeds maxResult.
-  const aMax = Math.max(0, Math.min(l.maxA, l.maxResult - lo(Math.min(l.maxB, l.maxResult))));
-  const a = randomInt(rng, Math.min(lo(aMax), aMax), aMax);
-  const bMax = Math.max(0, Math.min(l.maxB, l.maxResult - a));
-  const b = randomInt(rng, Math.min(lo(bMax), bMax), bMax);
-  return { a, op: '+', b, result: a + b };
+/**
+ * Range of A for which at least one valid B exists:
+ *   A + B = R  →  A ∈ [Rmin − Bmax, Rmax − Bmin]
+ *   A − B = R  →  A ∈ [Bmin + Rmin, Bmax + Rmax]
+ */
+function rangeOfA(op: Operator, l: MathLimits): Range {
+  const fromOthers =
+    op === '+'
+      ? { min: l.result.min - l.b.max, max: l.result.max - l.b.min }
+      : { min: l.b.min + l.result.min, max: l.b.max + l.result.max };
+  return intersect(l.a, fromOthers);
 }
 
-function subtraction(rng: Rng, l: MathLimits): MathTask {
-  // A − B = C with C >= 0, C <= maxResult, so A <= maxResult + maxB.
-  const aMax = Math.min(l.maxA, l.maxResult + l.maxB);
-  const a = randomInt(rng, Math.min(lo(aMax), aMax), aMax);
-  const bMin = Math.max(0, a - l.maxResult);
-  const bMax = Math.min(l.maxB, a);
-  const b = randomInt(rng, Math.max(bMin, Math.min(lo(bMax), bMax)), bMax);
-  return { a, op: '-', b, result: a - b };
+/** Range of B for a chosen A, given the result limits. */
+function rangeOfB(op: Operator, a: number, l: MathLimits): Range {
+  const fromResult =
+    op === '+'
+      ? { min: l.result.min - a, max: l.result.max - a }
+      : { min: a - l.result.max, max: a - l.result.min };
+  return intersect(l.b, fromResult);
 }
 
+/** Whether any task with this operator satisfies the limits. */
+export function isFeasible(op: Operator, l: MathLimits): boolean {
+  return !isEmpty(rangeOfA(op, l));
+}
+
+function makeTask(rng: Rng, op: Operator, l: MathLimits): MathTask {
+  const ra = rangeOfA(op, l);
+  const a = randomInt(rng, ra.min, ra.max);
+  const rb = rangeOfB(op, a, l);
+  const b = randomInt(rng, rb.min, rb.max);
+  return { a, op, b, result: op === '+' ? a + b : a - b };
+}
+
+/** Returns an empty list when no operation fits the limits. */
 export function generateMathTasks(rng: Rng, count: number, mode: OperatorMode, limits: MathLimits): MathTask[] {
+  const wanted: Operator[] = mode === 'add' ? ['+'] : mode === 'sub' ? ['-'] : ['+', '-'];
+  const ops = wanted.filter((op) => isFeasible(op, limits));
+  if (ops.length === 0) return [];
+
   const out: MathTask[] = [];
   const seen = new Set<string>();
   for (let i = 0; i < count; i++) {
-    const op: Operator = mode === 'add' ? '+' : mode === 'sub' ? '-' : rng() < 0.5 ? '+' : '-';
-    let task = op === '+' ? addition(rng, limits) : subtraction(rng, limits);
+    const op = ops.length === 1 ? ops[0] : rng() < 0.5 ? ops[0] : ops[1];
+    let task = makeTask(rng, op, limits);
     // Avoid repeats while it's still easy to find a fresh one.
-    for (let tries = 0; tries < 20 && seen.has(key(task)); tries++) {
-      task = op === '+' ? addition(rng, limits) : subtraction(rng, limits);
-    }
+    for (let tries = 0; tries < 20 && seen.has(key(task)); tries++) task = makeTask(rng, op, limits);
     seen.add(key(task));
     out.push(task);
   }

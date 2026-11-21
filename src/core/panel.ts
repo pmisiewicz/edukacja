@@ -1,5 +1,5 @@
 import type { AppState } from './state';
-import type { AnyTaskModule, OptionDef } from './types';
+import type { AnyTaskModule, NumberOptionDef, OptionDef } from './types';
 
 export interface PanelHandlers {
   /** Mutate the state; `rebuild` re-creates the panel (e.g. after task change). */
@@ -58,28 +58,49 @@ export function renderPanel(root: HTMLElement, modules: AnyTaskModule[], state: 
     (v) => h.change((s) => (s.task = v), true),
   );
 
-  const optionControls = m.options.map((d: OptionDef) => {
+  const numberInput = (d: NumberOptionDef) => {
+    const input = el('input', {
+      type: 'number',
+      min: String(d.min),
+      max: String(d.max),
+      step: '1',
+      value: String(ts.options[d.key]),
+    });
+    input.addEventListener('change', () => h.change((s) => (s.perTask[m.id].options[d.key] = input.value), true));
+    return input;
+  };
+
+  const optionControls: HTMLElement[] = [];
+  for (let i = 0; i < m.options.length; i++) {
+    const d: OptionDef = m.options[i];
     if (d.type === 'checkbox') {
-      return checkbox(d.label, ts.options[d.key] === true, (v) => h.change((s) => (s.perTask[m.id].options[d.key] = v), true));
-    }
-    if (d.type === 'number') {
-      const input = el('input', {
-        type: 'number',
-        min: String(d.min),
-        max: String(d.max),
-        step: '1',
-        value: String(ts.options[d.key]),
-      });
-      input.addEventListener('change', () =>
-        h.change((s) => (s.perTask[m.id].options[d.key] = input.value), true),
+      optionControls.push(
+        checkbox(d.label, ts.options[d.key] === true, (v) => h.change((s) => (s.perTask[m.id].options[d.key] = v), true)),
       );
-      return field(d.label, input);
+    } else if (d.type === 'number' && d.group) {
+      // Gather consecutive options of the same group into one "od [ ] do [ ]" row.
+      const row = el('div', { className: 'range-row' });
+      while (i < m.options.length) {
+        const g = m.options[i];
+        if (g.type !== 'number' || g.group !== d.group) break;
+        row.append(el('label', { className: 'range-part' }, [el('span', {}, [g.label]), numberInput(g)]));
+        i++;
+      }
+      i--;
+      optionControls.push(
+        el('div', { className: 'field' }, [el('span', { className: 'field-label' }, [d.group]), row]),
+      );
+    } else if (d.type === 'number') {
+      optionControls.push(field(d.label, numberInput(d)));
+    } else {
+      optionControls.push(
+        field(
+          d.label,
+          select(d.choices, String(ts.options[d.key]), (v) => h.change((s) => (s.perTask[m.id].options[d.key] = v), true)),
+        ),
+      );
     }
-    return field(
-      d.label,
-      select(d.choices, String(ts.options[d.key]), (v) => h.change((s) => (s.perTask[m.id].options[d.key] = v), true)),
-    );
-  });
+  }
 
   const countSelect = select(
     m.counts.map((n) => ({ value: String(n), label: String(n) })),

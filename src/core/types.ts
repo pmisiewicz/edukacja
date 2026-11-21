@@ -21,6 +21,8 @@ export interface CheckboxOptionDef extends OptionBase {
 
 export interface NumberOptionDef extends OptionBase {
   type: 'number';
+  /** Consecutive number options with the same group share one panel row (e.g. "od … do …"). */
+  group?: string;
   min: number;
   max: number;
   default: number;

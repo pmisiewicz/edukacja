@@ -24,9 +24,12 @@ export const mathModule: TaskModule<MathTask> = {
       ],
       default: 'mixed',
     },
-    { type: 'number', key: 'maxResult', label: 'Największy wynik', min: 1, max: 1000, default: 20 },
-    { type: 'number', key: 'maxA', label: 'Największa pierwsza liczba (A)', min: 1, max: 1000, default: 20 },
-    { type: 'number', key: 'maxB', label: 'Największa druga liczba (B)', min: 1, max: 1000, default: 10 },
+    { type: 'number', key: 'minA', group: 'Pierwsza liczba (A)', label: 'od', min: 0, max: 1000, default: 1 },
+    { type: 'number', key: 'maxA', group: 'Pierwsza liczba (A)', label: 'do', min: 0, max: 1000, default: 20 },
+    { type: 'number', key: 'minB', group: 'Druga liczba (B)', label: 'od', min: 0, max: 1000, default: 1 },
+    { type: 'number', key: 'maxB', group: 'Druga liczba (B)', label: 'do', min: 0, max: 1000, default: 10 },
+    { type: 'number', key: 'minResult', group: 'Wynik', label: 'od', min: 0, max: 1000, default: 0 },
+    { type: 'number', key: 'maxResult', group: 'Wynik', label: 'do', min: 0, max: 1000, default: 20 },
   ],
   counts: [15, 30, 45, 60],
   defaultCount: 30,
@@ -40,10 +43,11 @@ export const mathModule: TaskModule<MathTask> = {
   },
 
   generate(rng, count, o) {
+    const range = (k: string) => ({ min: getNumber(o, `min${k}`), max: getNumber(o, `max${k}`) });
     return generateMathTasks(rng, count, getString(o, 'ops') as OperatorMode, {
-      maxResult: getNumber(o, 'maxResult'),
-      maxA: getNumber(o, 'maxA'),
-      maxB: getNumber(o, 'maxB'),
+      a: range('A'),
+      b: range('B'),
+      result: range('Result'),
     });
   },
 
