@@ -4,7 +4,6 @@ import { newSeed } from './core/rng';
 import { renderSheets } from './core/sheet';
 import { loadState, normalizeTaskSettings, serializeSettings, stateToQuery, STORAGE_KEY, type AppState } from './core/state';
 import { getModule, modules } from './tasks';
-import { restoreFont } from './tasks/writing/font';
 
 const panel = document.getElementById('panel')!;
 const preview = document.getElementById('preview')!;
@@ -52,10 +51,6 @@ function drawPanel() {
       drawPanel();
     },
     print: () => window.print(),
-    refresh() {
-      sync(false);
-      drawPanel();
-    },
     async copyLink() {
       try {
         await navigator.clipboard.writeText(location.href);
@@ -77,8 +72,3 @@ sync(false);
 drawPanel();
 // Handwriting rows measure glyphs with the web font — redraw once it has loaded.
 document.fonts?.ready.then(() => sync(false));
-// A font the user uploaded earlier (kept in IndexedDB) replaces the built-in cursive.
-restoreFont().then(() => {
-  sync(false);
-  drawPanel();
-});

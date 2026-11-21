@@ -7,8 +7,6 @@ export interface PanelHandlers {
   newSheet(): void;
   print(): void;
   copyLink(): Promise<boolean>;
-  /** Redraw sheet and panel after a change made outside the state (e.g. a loaded font). */
-  refresh(): void;
 }
 
 function el<K extends keyof HTMLElementTagNameMap>(
@@ -150,7 +148,6 @@ export function renderPanel(root: HTMLElement, modules: AnyTaskModule[], state: 
       el('legend', {}, ['Zadanie']),
       field('Rodzaj karty', taskSelect),
       ...optionControls,
-      ...(m.panelExtras?.(h.refresh) ?? []),
       field('Liczba zadań na stronie', countSelect),
     ]),
     el('fieldset', {}, [

@@ -74,8 +74,6 @@ export interface TaskModule<P = unknown> {
   renderTask(task: P, ctx: RenderContext): string;
   /** HTML of the solved task for the answer key. */
   renderAnswer(task: P, ctx: RenderContext): string;
-  /** Extra panel controls that are not plain options (e.g. a font upload); `refresh` redraws sheet and panel. */
-  panelExtras?(refresh: () => void): HTMLElement[];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

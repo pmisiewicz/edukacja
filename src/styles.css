@@ -164,26 +164,6 @@ legend {
   color: var(--muted);
 }
 
-.font-note {
-  margin: 0;
-  font-size: 14px;
-  line-height: 1.35;
-  color: #374151;
-}
-.font-note:empty {
-  display: none;
-}
-.font-note.warn {
-  padding: 8px 10px;
-  border-radius: 6px;
-  background: #fef3c7;
-  color: #78350f;
-}
-.font-actions {
-  display: flex;
-  gap: 8px;
-}
-
 /* ---------- preview & A4 pages ---------- */
 .preview {
   flex: 1;

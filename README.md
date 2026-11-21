@@ -19,7 +19,7 @@ Online: https://pmisiewicz.github.io/edukacja/
 
 **Pisanie**
 - **Szlaczki** — fale, pętelki, zygzaki, schodki, łuki, sprężynki: wzór, ślad i miejsce na kontynuację.
-- **Litery pisane** — liniatura jak w zeszycie 1-klasisty; losowe litery lub własne litery/wyrazy. Domyślnie czcionka Playwrite Polska, która **nie** jest wzorem z elementarza — w panelu można wczytać własną czcionkę (TTF/OTF/WOFF, np. licencjonowane „Pismo Szkolne”). Plik zostaje tylko w tej przeglądarce i jest automatycznie dopasowywany do liniatury.
+- **Litery pisane** — czcionka Playwrite Polska, liniatura jak w zeszycie 1-klasisty; losowe litery lub własne litery/wyrazy.
 
 Każda karta ma opcjonalny klucz odpowiedzi (osobna strona). Link z paska adresu odtwarza dokładnie tę samą kartę (kod karty = ziarno losowania).
 
