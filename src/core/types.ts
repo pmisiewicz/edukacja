@@ -28,7 +28,14 @@ export interface NumberOptionDef extends OptionBase {
   default: number;
 }
 
-export type OptionDef = SelectOptionDef | CheckboxOptionDef | NumberOptionDef;
+export interface TextOptionDef extends OptionBase {
+  type: 'text';
+  placeholder?: string;
+  maxLength: number;
+  default: string;
+}
+
+export type OptionDef = SelectOptionDef | CheckboxOptionDef | NumberOptionDef | TextOptionDef;
 
 export interface RenderContext {
   /** Colour print (otherwise black & white). */
@@ -50,6 +57,8 @@ export interface TaskModule<P = unknown> {
   id: string;
   /** Name shown in the task picker. */
   name: string;
+  /** Group in the task picker. */
+  category: string;
   options: OptionDef[];
   /** Allowed numbers of tasks per page. */
   counts: number[];

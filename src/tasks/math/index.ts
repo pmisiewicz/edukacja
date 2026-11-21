@@ -12,6 +12,7 @@ function row(t: MathTask, answer: string): string {
 export const mathModule: TaskModule<MathTask> = {
   id: 'math',
   name: 'Działania matematyczne',
+  category: 'Matematyka',
   options: [
     {
       type: 'select',

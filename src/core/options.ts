@@ -28,6 +28,8 @@ export function normalizeOptions(defs: OptionDef[], raw: unknown): Options {
     const v = src[d.key];
     if (d.type === 'checkbox') {
       out[d.key] = typeof v === 'boolean' ? v : d.default;
+    } else if (d.type === 'text') {
+      out[d.key] = typeof v === 'string' ? v.slice(0, d.maxLength) : d.default;
     } else if (d.type === 'number') {
       const n = typeof v === 'number' ? v : typeof v === 'string' && v.trim() !== '' ? Number(v) : NaN;
       out[d.key] = Number.isFinite(n) ? Math.min(d.max, Math.max(d.min, Math.round(n))) : d.default;

@@ -25,6 +25,7 @@ function answerText(t: ClockTask, o: Options): string {
 export const clockModule: TaskModule<ClockTask> = {
   id: 'clock',
   name: 'Zegary',
+  category: 'Czas i mierzenie',
   options: [
     {
       type: 'select',

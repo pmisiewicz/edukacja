@@ -70,3 +70,5 @@ window.addEventListener('popstate', () => {
 
 sync(false);
 drawPanel();
+// Handwriting rows measure glyphs with the web font — redraw once it has loaded.
+document.fonts?.ready.then(() => sync(false));

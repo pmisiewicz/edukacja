@@ -52,11 +52,20 @@ export function renderPanel(root: HTMLElement, modules: AnyTaskModule[], state: 
   const printBtn = el('button', { className: 'btn', type: 'button' }, ['🖨️ Drukuj']);
   printBtn.addEventListener('click', h.print);
 
-  const taskSelect = select(
-    modules.map((x) => ({ value: x.id, label: x.name })),
-    m.id,
-    (v) => h.change((s) => (s.task = v), true),
-  );
+  // Task picker grouped by category.
+  const taskSelect = el('select');
+  for (const category of [...new Set(modules.map((x) => x.category))]) {
+    taskSelect.append(
+      el(
+        'optgroup',
+        { label: category },
+        modules
+          .filter((x) => x.category === category)
+          .map((x) => el('option', { value: x.id, selected: x.id === m.id }, [x.name])),
+      ),
+    );
+  }
+  taskSelect.addEventListener('change', () => h.change((s) => (s.task = taskSelect.value), true));
 
   const numberInput = (d: NumberOptionDef) => {
     const input = el('input', {
@@ -92,6 +101,15 @@ export function renderPanel(root: HTMLElement, modules: AnyTaskModule[], state: 
       );
     } else if (d.type === 'number') {
       optionControls.push(field(d.label, numberInput(d)));
+    } else if (d.type === 'text') {
+      const input = el('input', {
+        type: 'text',
+        value: String(ts.options[d.key]),
+        placeholder: d.placeholder ?? '',
+        maxLength: d.maxLength,
+      });
+      input.addEventListener('change', () => h.change((s) => (s.perTask[m.id].options[d.key] = input.value), true));
+      optionControls.push(field(d.label, input));
     } else {
       optionControls.push(
         field(

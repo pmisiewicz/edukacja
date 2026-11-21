@@ -6,6 +6,7 @@ import { thermometerSvg } from './render';
 export const thermometerModule: TaskModule<ThermometerTask> = {
   id: 'thermometer',
   name: 'Termometry',
+  category: 'Czas i mierzenie',
   options: [
     {
       type: 'select',

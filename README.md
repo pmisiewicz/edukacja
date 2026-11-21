@@ -5,9 +5,21 @@ Online: https://pmisiewicz.github.io/edukacja/
 
 ## Rodzaje kart
 
+**Czas i mierzenie**
 - **Zegary** — odczytywanie godziny lub rysowanie wskazówek; dokładność od pełnych godzin do 1 minuty, format 24h, pomoce na tarczy.
+- **Upływ czasu** — ile minęło między dwoma zegarami albo która będzie „za 45 min”.
+- **Kalendarz** — kartka miesiąca i pytania (dzień tygodnia, data za tydzień, ile sobót…).
 - **Termometry** — odczyt temperatury lub zamalowanie słupka; skala −30…+50 °C, dokładność 10/5/2/1 °C.
-- **Działania matematyczne** — dodawanie/odejmowanie, limity wyniku i składników, do 60 działań na stronie.
+- **Linijka** — pomiar odcinka w cm lub cm i mm; linijka w skali 1:1 (drukuj w skali 100%).
+- **Waga kuchenna** — odczyt masy lub rysowanie wskazówki; skala 0–1000 g lub 0–5 kg.
+
+**Matematyka**
+- **Działania matematyczne** — dodawanie/odejmowanie, zakresy liczb i wyniku, do 60 działań na stronie.
+- **Pieniądze** — policz monety i banknoty (złote, opcjonalnie grosze).
+
+**Pisanie**
+- **Szlaczki** — fale, pętelki, zygzaki, schodki, łuki, sprężynki: wzór, ślad i miejsce na kontynuację.
+- **Litery pisane** — czcionka Playwrite Polska, liniatura jak w zeszycie 1-klasisty; losowe litery lub własne litery/wyrazy.
 
 Każda karta ma opcjonalny klucz odpowiedzi (osobna strona). Link z paska adresu odtwarza dokładnie tę samą kartę (kod karty = ziarno losowania).
 
