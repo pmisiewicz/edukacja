@@ -85,8 +85,9 @@ function coin(d: number, x: number, y: number, color: boolean): string {
   const inner = !color ? '#fff' : d === 500 ? '#e5e7eb' : '#f6dc84';
   let s = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${outer}" stroke="#111" stroke-width="0.6"/>`;
   if (bicolor) s += `<circle cx="${cx}" cy="${cy}" r="${r * 0.68}" fill="${inner}" stroke="#111" stroke-width="0.4"/>`;
-  s += `<text x="${cx}" y="${cy - 0.5}" font-size="${r * 0.85}" font-weight="700" text-anchor="middle" fill="#111">${label}</text>`;
-  s += `<text x="${cx}" y="${cy + r * 0.55}" font-size="${r * 0.42}" text-anchor="middle" fill="#111">${unit}</text>`;
+  // Nominal and unit stacked and centred as a block on the coin's middle.
+  s += `<text x="${cx}" y="${cy - r * 0.14}" font-size="${r * 0.8}" font-weight="700" text-anchor="middle" dominant-baseline="central" fill="#111">${label}</text>`;
+  s += `<text x="${cx}" y="${cy + r * 0.46}" font-size="${r * 0.36}" text-anchor="middle" dominant-baseline="central" fill="#111">${unit}</text>`;
   return s;
 }
 
@@ -163,7 +164,7 @@ export const moneyModule: TaskModule<MoneyTask> = {
 
   renderTask(t, ctx) {
     const answer = getBool(ctx.options, 'grosze')
-      ? '<span class="box wide"></span><span class="unit">zł</span><span class="box"></span><span class="unit">gr</span>'
+      ? '<span class="box wide"></span><span class="unit">zł</span><span class="box wide"></span><span class="unit">gr</span>'
       : '<span class="box wide"></span><span class="unit">zł</span>';
     return `<div class="figure">${moneySvg(t, ctx.color)}</div><div class="answer">${answer}</div>`;
   },

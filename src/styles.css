@@ -344,6 +344,15 @@ legend {
   gap: 1mm;
   font-size: 14pt;
 }
+/* more space between the figure and a bigger answer field (ruler) */
+.answer.roomy {
+  height: 11mm;
+  margin-top: 3mm;
+  gap: 2mm;
+}
+.answer.roomy .box {
+  height: 10mm;
+}
 .answer.prompt {
   font-weight: 700;
   font-size: 15pt;

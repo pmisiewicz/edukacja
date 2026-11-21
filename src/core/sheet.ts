@@ -1,15 +1,26 @@
 import { escapeHtml } from './options';
 import { createRng, hashSeed } from './rng';
 import type { AppState } from './state';
-import type { AnyTaskModule, RenderContext } from './types';
+import type { AnyTaskModule, GridLayout, RenderContext } from './types';
+
+/** Page geometry in mm (see .page / .grid in styles.css). */
+const GRID_W = 210 - 2 * 12;
+const GRID_H = 244; // A4 height minus padding, header and footer
+const GAP = 4;
+
+export function cellAspect(layout: GridLayout): number {
+  const w = (GRID_W - GAP * (layout.columns - 1)) / layout.columns;
+  const h = (GRID_H - GAP * (layout.rows - 1)) / layout.rows;
+  return w / h;
+}
 
 /** Renders the worksheet (and optionally the answer key) as A4 pages. */
 export function renderSheets(m: AnyTaskModule, state: AppState): string {
   const ts = state.perTask[m.id];
   const rng = createRng(hashSeed(`${state.seed}:${m.id}`));
   const tasks = m.generate(rng, ts.count, ts.options);
-  const ctx: RenderContext = { color: state.color, options: ts.options };
   const layout = m.layout(ts.count, ts.options);
+  const ctx: RenderContext = { color: state.color, options: ts.options, cellAspect: cellAspect(layout) };
   const instruction = escapeHtml(ts.instruction.trim() || m.defaultInstruction(ts.options));
   const gridStyle = `--cols:${layout.columns};--rows:${layout.rows}`;
   const footer = `<footer class="sheet-footer">Kod karty: ${escapeHtml(state.seed)}</footer>`;

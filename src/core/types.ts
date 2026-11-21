@@ -41,6 +41,8 @@ export interface RenderContext {
   /** Colour print (otherwise black & white). */
   color: boolean;
   options: Options;
+  /** Approximate width / height of one grid cell on the A4 page (lets rows fill the full width). */
+  cellAspect: number;
 }
 
 export interface GridLayout {

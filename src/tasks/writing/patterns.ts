@@ -1,7 +1,7 @@
 import { getString } from '../../core/options';
 import { pickDistinct } from '../../core/rng';
-import type { TaskModule } from '../../core/types';
-import { lines, ROW_WIDTH, rowSvg, SOLID, TRACE, TRACE_OPTION, traceFraction } from './shared';
+import type { RenderContext, TaskModule } from '../../core/types';
+import { lines, rowSvg, rowWidth, SOLID, TRACE, TRACE_OPTION, traceFraction } from './shared';
 
 /** Row geometry: pattern between TOP and BOTTOM. */
 const TOP = 5;
@@ -100,10 +100,11 @@ export interface PatternTask {
   pattern: string;
 }
 
-function patternRow(t: PatternTask, traceShare: number, full: boolean): string {
+function patternRow(t: PatternTask, traceShare: number, full: boolean, ctx: RenderContext): string {
   const p = PATTERNS.find((x) => x.id === t.pattern) ?? PATTERNS[0];
+  const width = rowWidth(ROW_H, ctx.cellAspect);
   const x0 = 4;
-  const units = Math.floor((ROW_WIDTH - 2 * x0) / p.unit);
+  const units = Math.floor((width - 2 * x0) / p.unit);
   const solidUnits = Math.max(1, Math.round(16 / p.unit)); // ~16 units wide of model
   const traceUnits = full ? units - solidUnits : Math.max(1, Math.round(units * traceShare) - solidUnits);
 
@@ -116,10 +117,10 @@ function patternRow(t: PatternTask, traceShare: number, full: boolean): string {
   };
 
   const body =
-    lines([{ y: TOP }, { y: MID, dashed: true }, { y: BOTTOM, strong: true }]) +
+    lines(width, [{ y: TOP }, { y: MID, dashed: true }, { y: BOTTOM, strong: true }]) +
     `<path d="${segment(0, solidUnits)}" fill="none" ${SOLID} stroke-linejoin="round"/>` +
     `<path d="${segment(solidUnits, traceUnits)}" fill="none" ${full ? SOLID : TRACE} stroke-linejoin="round"/>`;
-  return rowSvg(ROW_H, body);
+  return rowSvg(width, ROW_H, body);
 }
 
 const GROUPS: Record<string, Pattern['group'][]> = {
@@ -163,6 +164,6 @@ export const patternsModule: TaskModule<PatternTask> = {
   },
 
   renderTask: (t, ctx) =>
-    `<div class="figure">${patternRow(t, traceFraction(getString(ctx.options, 'trace')), false)}</div>`,
-  renderAnswer: (t) => `<div class="figure">${patternRow(t, 1, true)}</div>`,
+    `<div class="figure">${patternRow(t, traceFraction(getString(ctx.options, 'trace')), false, ctx)}</div>`,
+  renderAnswer: (t, ctx) => `<div class="figure">${patternRow(t, 1, true, ctx)}</div>`,
 };

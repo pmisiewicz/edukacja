@@ -1,7 +1,7 @@
 import { escapeHtml, getString } from '../../core/options';
 import { pickDistinct } from '../../core/rng';
-import type { TaskModule } from '../../core/types';
-import { lines, ROW_WIDTH, rowSvg, TRACE_OPTION, traceFraction } from './shared';
+import type { RenderContext, TaskModule } from '../../core/types';
+import { lines, rowSvg, rowWidth, TRACE_OPTION, traceFraction } from './shared';
 
 const LOWER = 'a ą b c ć d e ę f g h i j k l ł m n ń o ó p r s ś t u w y z ź ż'.split(' ');
 const UPPER = LOWER.map((l) => l.toUpperCase());
@@ -45,21 +45,22 @@ export function parseCustom(input: string): string[] {
     .slice(0, 50);
 }
 
-function letterRow(t: LetterTask, traceShare: number, full: boolean, color: boolean): string {
+function letterRow(t: LetterTask, traceShare: number, full: boolean, ctx: RenderContext): string {
+  const width = rowWidth(ROW_H, ctx.cellAspect);
   const x0 = 3;
   const step = textWidth(t.text) + GAP;
-  const reps = Math.max(1, Math.floor((ROW_WIDTH - x0) / step));
+  const reps = Math.max(1, Math.floor((width - x0 + GAP) / step));
   const traced = full ? reps - 1 : Math.max(1, Math.round(reps * traceShare) - 1);
   const text = escapeHtml(t.text);
   const glyph = (i: number, fill: string) =>
     `<text x="${x0 + i * step}" y="${BASE}" font-size="${FONT_SIZE}" fill="${fill}">${text}</text>`;
 
   let body =
-    `<rect x="0" y="${XTOP}" width="${ROW_WIDTH}" height="${BASE - XTOP}" fill="${color ? '#fef9c3' : '#f3f4f6'}"/>` +
-    lines([{ y: ASC }, { y: XTOP, strong: true }, { y: BASE, strong: true }, { y: DESC }]);
+    `<rect x="0" y="${XTOP}" width="${width}" height="${BASE - XTOP}" fill="${ctx.color ? '#fef9c3' : '#f3f4f6'}"/>` +
+    lines(width, [{ y: ASC }, { y: XTOP, strong: true }, { y: BASE, strong: true }, { y: DESC }]);
   body += glyph(0, '#111');
   for (let i = 1; i <= traced; i++) body += glyph(i, full ? '#111' : '#b8bcc4');
-  return rowSvg(ROW_H, `<g font-family="'Playwrite PL', cursive">${body}</g>`);
+  return rowSvg(width, ROW_H, `<g font-family="'Playwrite PL', cursive">${body}</g>`);
 }
 
 export const lettersModule: TaskModule<LetterTask> = {
@@ -105,6 +106,6 @@ export const lettersModule: TaskModule<LetterTask> = {
   },
 
   renderTask: (t, ctx) =>
-    `<div class="figure">${letterRow(t, traceFraction(getString(ctx.options, 'trace')), false, ctx.color)}</div>`,
-  renderAnswer: (t, ctx) => `<div class="figure">${letterRow(t, 1, true, ctx.color)}</div>`,
+    `<div class="figure">${letterRow(t, traceFraction(getString(ctx.options, 'trace')), false, ctx)}</div>`,
+  renderAnswer: (t, ctx) => `<div class="figure">${letterRow(t, 1, true, ctx)}</div>`,
 };

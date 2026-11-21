@@ -80,11 +80,11 @@ export const rulerModule: TaskModule<RulerTask> = {
 
   renderTask(t, ctx) {
     const answer = getBool(ctx.options, 'mm')
-      ? '<span class="box"></span><span class="unit">cm</span><span class="box"></span><span class="unit">mm</span>'
-      : '<span class="box"></span><span class="unit">cm</span>';
-    return `<div class="figure">${rulerSvg(t, getBool(ctx.options, 'guides'), ctx.color)}</div><div class="answer">${answer}</div>`;
+      ? '<span class="box wide"></span><span class="unit">cm</span><span class="box wide"></span><span class="unit">mm</span>'
+      : '<span class="box wide"></span><span class="unit">cm</span>';
+    return `<div class="figure">${rulerSvg(t, getBool(ctx.options, 'guides'), ctx.color)}</div><div class="answer roomy">${answer}</div>`;
   },
 
   renderAnswer: (t, ctx) =>
-    `<div class="figure">${rulerSvg(t, getBool(ctx.options, 'guides'), ctx.color)}</div><div class="answer prompt">${formatLength(t.length)}</div>`,
+    `<div class="figure">${rulerSvg(t, getBool(ctx.options, 'guides'), ctx.color)}</div><div class="answer roomy prompt">${formatLength(t.length)}</div>`,
 };

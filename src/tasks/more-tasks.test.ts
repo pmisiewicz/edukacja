@@ -138,7 +138,7 @@ describe('all modules', () => {
       for (const count of m.counts) {
         const tasks = m.generate(createRng(count), count, options);
         expect(tasks.length).toBe(count);
-        const ctx = { color: true, options };
+        const ctx = { color: true, options, cellAspect: 4 };
         for (const t of tasks) {
           expect(m.renderTask(t, ctx)).toContain('<');
           expect(m.renderAnswer(t, ctx)).toContain('<');
