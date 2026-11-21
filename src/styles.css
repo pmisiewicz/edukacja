@@ -245,7 +245,13 @@ legend {
   height: auto;
   gap: 1mm;
 }
+/* "lub" sits outside the flow so both time rows line up exactly */
+.answer.dual > .time-group {
+  position: relative;
+}
 .answer.dual .or {
+  position: absolute;
+  right: 100%;
   margin: 0 1.5mm 0 0;
 }
 .colon {
